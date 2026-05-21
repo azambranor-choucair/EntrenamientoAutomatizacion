@@ -1,21 +1,11 @@
-trigger:
-- main
-
-pool:
-  name: Default
-
-steps:
-- checkout: self
-  clean: true
-
 - task: PowerShell@2
   displayName: 'Validar Gradle Wrapper'
   inputs:
     targetType: 'inline'
     script: |
-      dir "$(Build.SourcesDirectory)"
-      if (!(Test-Path "$(Build.SourcesDirectory)\gradlew.bat")) {
-        Write-Error "gradlew.bat no encontrado en la raíz del repo"
+      dir "$(Build.SourcesDirectory)\ms_training_test"
+      if (!(Test-Path "$(Build.SourcesDirectory)\ms_training_test\gradlew.bat")) {
+        Write-Error "gradlew.bat no encontrado en ms_training_test"
         exit 1
       }
       Write-Host "gradlew.bat encontrado"
@@ -24,6 +14,6 @@ steps:
   displayName: 'Ejecutar pruebas E2E con Serenity'
   inputs:
     targetType: 'inline'
-    workingDirectory: '$(Build.SourcesDirectory)'
+    workingDirectory: '$(Build.SourcesDirectory)\ms_training_test'
     script: |
       .\gradlew.bat clean test
