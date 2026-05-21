@@ -1,0 +1,23 @@
+trigger:
+- main
+pool:
+  name: Default
+steps:
+- checkout: self
+  clean: true
+- task: PowerShell@2
+  displayName: 'Validar Gradle Wrapper'
+  inputs:
+    targetType: 'inline'
+    script: |
+      dir "$(Build.SourcesDirectory)"
+      if (!(Test-Path "$(Build.SourcesDirectory)\gradlew.bat")) {
+        Write-Error "gradlew.bat no encontrado en la raíz del repo"
+        exit 1
+      }
+      Write-Host "gradlew.bat encontrado" - task: PowerShell@2
+  displayName: 'Ejecutar pruebas E2E con Serenity'
+  inputs:
+    targetType: 'inline'    workingDirectory: '$(Build.SourcesDirectory)'
+  script: |
+      .\gradlew.bat clean test
