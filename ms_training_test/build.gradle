@@ -1,0 +1,54 @@
+plugins {
+    id 'java'
+    id 'idea'
+    id 'net.serenity-bdd.serenity-gradle-plugin' version '3.9.8'
+}
+
+group = 'co.demoqa.automation'
+version = '1.0.0'
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    serenityVersion = '3.9.8'
+    junitVersion = '4.13.2'
+}
+
+dependencies {
+
+    // ✅ Núcleo Serenity
+    testImplementation "net.serenity-bdd:serenity-core:${serenityVersion}"
+    testImplementation "net.serenity-bdd:serenity-junit:${serenityVersion}"
+
+    // ✅ Cucumber + Serenity
+    testImplementation "net.serenity-bdd:serenity-cucumber:${serenityVersion}"
+
+    // ✅ Screenplay
+    testImplementation "net.serenity-bdd:serenity-screenplay:${serenityVersion}"
+    testImplementation "net.serenity-bdd:serenity-screenplay-webdriver:${serenityVersion}"
+
+    // ✅ 🔥 IMPORTANTE (esto corrige tu error)
+    testImplementation "net.serenity-bdd:serenity-ensure:${serenityVersion}"
+    testImplementation "net.serenity-bdd:serenity-reports:${serenityVersion}"
+
+    // ✅ JUnit
+    testImplementation "junit:junit:${junitVersion}"
+}
+
+test {
+    useJUnit()
+
+    testLogging {
+        events "PASSED", "FAILED", "SKIPPED"
+    }
+
+    systemProperties System.getProperties()
+}
+
+gradle.startParameter.continueOnFailure = true
+
+tasks.withType(Test) {
+    finalizedBy tasks.named("aggregate")
+}
